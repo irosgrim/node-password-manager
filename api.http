@@ -1,0 +1,21 @@
+### get all secrets
+http://localhost:3000/
+
+### get one secret by id
+http://localhost:3000/secret/9
+
+
+### search secrets by label
+http://localhost:3000/secrets?q=gm
+
+### post new secret
+POST http://localhost:3000/secret
+Content-Type: application/json
+
+{
+    "label": "my bank account",
+    "secret": {
+        "username": "daddyc00l",
+        "password": "cash_is_king"
+    }
+}
