@@ -2,17 +2,20 @@ import express from 'express';
 
 class LogHandler {
 
-    error(req: express.Request, err: Error) {
+    private getFullUrl(req: express.Request): string {
         const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-        console.log('URL: ', fullUrl)
+        return fullUrl;
+    }
+
+    error(req: express.Request, err: Error) {
+        console.log('URL: ', this.getFullUrl(req))
         console.log('METHOD: ', req.method);
         console.log('DATE: ', new Date());
         console.log('ERROR: ', err.message);
     }
 
     info(req: express.Request, log: any) {
-        const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-        console.log('URL: ', fullUrl);
+        console.log('URL: ', this.getFullUrl(req));
         console.log('METHOD: ', req.method);
         console.log('DATE: ', new Date());
         console.log('LOG: ', log);
