@@ -6,7 +6,7 @@
   "scripts": {
     "start-dev": "ts-node-dev --respawn --cache-directory ./temp src",
     "lint": "eslint . --ext .ts",
-    "build": "tsc --build",
+    "build": "tsc --build && cp .env ./build",
     "clean": "tsc --build --clean",
     "test": "jest"
   },
