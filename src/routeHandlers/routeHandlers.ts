@@ -1,6 +1,6 @@
 import Cryptography from '../crypto/crypto';
 import { pool } from '../db/connect';
-import { getSecretWithId, insertNewSecret } from '../db/queries';
+import { getAllEntries, getSecretWithId, insertNewSecret } from '../db/queries';
 import { log } from '../helpers/logging';
 import { LoggedInRequest } from '../security/userAuthorisation';
 import express from 'express';
@@ -58,5 +58,26 @@ export const searchSecrets = () => {
         if(searchQuery) {
             console.log(searchQuery);
         }
+    }
+}
+
+interface Entry {
+    id: number;
+    label: string;
+    secret: string;
+    user_id: number;
+}
+
+export const getAllSecrets = () => {
+    return async (req: LoggedInRequest, res: express.Response) => {
+        pool.query(getAllEntries, async (error, results) => {
+            if (error) {
+                log.error(req, error);
+            }
+            const rows: Entry[] = results.rows;
+            log.info(req, rows);
+            res.send(rows);
+            return;
+        })
     }
 }
