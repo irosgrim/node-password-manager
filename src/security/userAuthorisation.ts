@@ -1,5 +1,4 @@
 import express from 'express';
-import { log } from '../helpers/logging';
 
 export interface LoggedInRequest extends express.Request {
     authorisedUser?: number | null;
@@ -21,7 +20,7 @@ export const checkAuthorisation = () => {
         //         console.log('Bad JWT format');
         //     }
         // }
-        const authorisedUser: number | null = 1;
+        const authorisedUser: number | null = null;
 
         if(!authorisedUser) {
             res.status(401).send('Please log in!');

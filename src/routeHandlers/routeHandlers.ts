@@ -70,7 +70,7 @@ interface Entry {
 
 export const getAllSecrets = () => {
     return async (req: LoggedInRequest, res: express.Response) => {
-        pool.query(getAllEntries, async (error, results) => {
+        pool.query(getAllEntries, [req.authorisedUser], async (error, results) => {
             if (error) {
                 log.error(req, error);
             }

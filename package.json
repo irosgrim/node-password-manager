@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start-dev": "ts-node-dev --respawn --cache-directory ./temp src",
+    "production": "node ./build",
+    "dev": "ts-node-dev --respawn --cache-directory ./temp src",
     "lint": "eslint . --ext .ts",
-    "build": "tsc --build && cp .env ./build",
+    "build": "tsc --build",
     "clean": "tsc --build --clean",
     "test": "jest"
   },

@@ -6,13 +6,14 @@ import { getAllSecrets, getSecretById, postNewSecret, searchSecrets } from './ro
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use(checkAuthorisation());
 
 app.use(express.json());
 
-app.get('/', checkAuthorisation(), getAllSecrets())
-app.get('/secret/:id', checkAuthorisation(), getSecretById());
-app.get('/search', checkAuthorisation(), searchSecrets())
+app.get('/all', getAllSecrets())
+app.get('/secret/:id', getSecretById());
+app.get('/search', searchSecrets())
 
-app.post('/secret', checkAuthorisation(), postNewSecret())
+app.post('/new-secret', postNewSecret())
 
 app.listen(PORT, () => log.text(`server 🔥 on port ${PORT}`));

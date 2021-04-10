@@ -1,15 +1,15 @@
 ### get all secrets
-http://localhost:3000/
+http://localhost:3000/all
 
 ### get one secret by id
 http://localhost:3000/secret/11
 
 
 ### search secrets by label
-http://localhost:3000/secrets?q=gm
+http://localhost:3000/search?q=gm
 
 ### post new secret
-POST http://localhost:3000/secret
+POST http://localhost:3000/new-secret
 Content-Type: application/json
 
 {

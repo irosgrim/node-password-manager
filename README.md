@@ -15,7 +15,7 @@ CRYPTO_SECRET_KEY=32_bit_secret_key
 `npm install`
 
 ### Start development
-`npm run start-dev`
+`npm run dev`
 
 ### Build for production
 `npm run build`
