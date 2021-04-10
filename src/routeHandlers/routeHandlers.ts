@@ -1,6 +1,6 @@
 import Cryptography from '../crypto/crypto';
 import { pool } from '../db/connect';
-import { getAllEntries, getCryptoKeyForUser, getSecretWithId, insertNewSecret, search } from '../db/queries';
+import { getAllEntries, getCryptoKeyForUser, getSecretWithId, insertNewSecret, search, updateSpecificSecret } from '../db/queries';
 import { log } from '../helpers/logging';
 import { LoggedInRequest } from '../security/userAuthorisation';
 import express from 'express';
@@ -13,9 +13,9 @@ export const getSecretById = () => {
     
         if (secretId) {
             try {
-                const crytpoKeyQueryPromise = pool.query(getCryptoKeyForUser, [authorisedUser]);
+                const cryptoSecretForUser = pool.query(getCryptoKeyForUser, [authorisedUser]);
                 const resultsQueryPromise = pool.query(getSecretWithId, [secretId, authorisedUser]);
-                const [results, cryptoKey] = await Promise.all([resultsQueryPromise, crytpoKeyQueryPromise]);
+                const [results, cryptoKey] = await Promise.all([resultsQueryPromise, cryptoSecretForUser]);
 
                 const _cryptoKey = cryptoKey.rows[0].key;
                 const decryptedData = results.rows.map((entry) => {
@@ -44,9 +44,10 @@ export const postNewSecret = () => {
         const authorisedUser = req.authorisedUser;
     
         if (secret) {
-            const crytpoKeyQueryPromise = await pool.query(getCryptoKeyForUser, [authorisedUser]);
-            const cryptoKey = crytpoKeyQueryPromise.rows[0].key;
-            const secretEncrypted = await new Cryptography().encrypt(secret, cryptoKey);
+            const cryptography = new Cryptography();
+            const cryptoSecretForUser = await pool.query(getCryptoKeyForUser, [authorisedUser]);
+            const cryptoKey = cryptoSecretForUser.rows[0].key;
+            const secretEncrypted = await cryptography.encrypt(secret, cryptoKey);
             try {
                 await pool.query(insertNewSecret, [label, secretEncrypted, authorisedUser]);
                 res.send('OK!');
@@ -56,6 +57,39 @@ export const postNewSecret = () => {
         }
     }
 }
+
+export const updateSecret = () => {
+    return async (req: LoggedInRequest, res: express.Response) => {
+        const secretId = req.body.secretId;
+        const secret = JSON.stringify(req.body.secret);
+        const label = req.body.label;
+        const authorisedUser = req.authorisedUser;
+    
+        if (secretId) {
+            const cryptography = new Cryptography();
+            const cryptoSecretForUser = await pool.query(getCryptoKeyForUser, [authorisedUser]);
+            const cryptoKey = cryptoSecretForUser.rows[0].key;
+            const secretEncrypted = await cryptography.encrypt(secret, cryptoKey);
+            try {
+                const updateQuery = await pool.query(updateSpecificSecret, [label, secretEncrypted, authorisedUser, secretId]);
+                if(updateQuery.rows.length) {
+                    const response = {
+                        id : secretId, 
+                        label, 
+                        secret: req.body.secret
+                    };
+                    res.send(response);
+                } else {
+                    res.status(400).send('NOT OK!');
+                }
+            } catch(err) {
+                log.error(req, err);
+                res.status(500).send('NOT OK!');
+            }
+        }
+    }
+}
+
 
 export const searchSecrets = () => {
     return async (req: LoggedInRequest, res: express.Response) => {

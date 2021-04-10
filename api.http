@@ -2,20 +2,35 @@
 http://localhost:3000/all
 
 ### get one secret by id
-http://localhost:3000/secret/11
+http://localhost:3000/secret/8
 
 
 ### search secrets by label
-http://localhost:3000/search?q=las
+http://localhost:3000/search?q=yaho
 
 ### post new secret
 POST http://localhost:3000/new-secret
 Content-Type: application/json
 
 {
-    "label": "my bank account",
+    "label": "yahoo",
     "secret": {
-        "username": "daddyc00l",
-        "password": "cash_is_king"
+        "username": "yahoo",
+        "password": "strongpassword",
+        "color": "pink"
+    }
+}
+
+### update secret by id
+PATCH http://localhost:3000/update-secret
+Content-Type: application/json
+
+{
+    "secretId": 15,
+    "label": "updated secret 4",
+    "secret": {
+        "username": "new username 4",
+        "password": "even stronger password",
+        "color": "red"
     }
 }
