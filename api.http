@@ -6,7 +6,7 @@ http://localhost:3000/secret/11
 
 
 ### search secrets by label
-http://localhost:3000/search?q=gm
+http://localhost:3000/search?q=las
 
 ### post new secret
 POST http://localhost:3000/new-secret

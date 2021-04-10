@@ -20,7 +20,7 @@ export const checkAuthorisation = () => {
         //         console.log('Bad JWT format');
         //     }
         // }
-        const authorisedUser: number | null = null;
+        const authorisedUser: number | null = 1;
 
         if(!authorisedUser) {
             res.status(401).send('Please log in!');

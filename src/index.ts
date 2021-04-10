@@ -10,10 +10,10 @@ app.use(checkAuthorisation());
 
 app.use(express.json());
 
-app.get('/all', getAllSecrets())
+app.get('/all', getAllSecrets());
 app.get('/secret/:id', getSecretById());
-app.get('/search', searchSecrets())
+app.get('/search', searchSecrets());
 
-app.post('/new-secret', postNewSecret())
+app.post('/new-secret', postNewSecret());
 
 app.listen(PORT, () => log.text(`server 🔥 on port ${PORT}`));

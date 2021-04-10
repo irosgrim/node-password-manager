@@ -1,6 +1,6 @@
 import Cryptography from '../crypto/crypto';
 import { pool } from '../db/connect';
-import { getAllEntries, getCryptoKeyForUser, getSecretWithId, insertNewSecret } from '../db/queries';
+import { getAllEntries, getCryptoKeyForUser, getSecretWithId, insertNewSecret, search } from '../db/queries';
 import { log } from '../helpers/logging';
 import { LoggedInRequest } from '../security/userAuthorisation';
 import express from 'express';
@@ -58,11 +58,17 @@ export const postNewSecret = () => {
 }
 
 export const searchSecrets = () => {
-    return async (req: LoggedInRequest) => {
+    return async (req: LoggedInRequest, res: express.Response) => {
         const searchQuery = req.query.q || '';
+        const authorisedUser = req.authorisedUser;
         
         if(searchQuery) {
-            console.log(searchQuery);
+            try {
+                const results = await pool.query(search, [searchQuery, authorisedUser]);
+                res.send(results.rows);
+            } catch(err) {
+                log.error(req, err);
+            }
         }
     }
 }
