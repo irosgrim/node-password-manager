@@ -13,9 +13,9 @@ export const getSecretById = () => {
     
         if (secretId) {
             try {
-                const cryptoSecretForUser = pool.query(getCryptoKeyForUser, [authorisedUser]);
+                const cryptoKeyForUser = pool.query(getCryptoKeyForUser, [authorisedUser]);
                 const resultsQueryPromise = pool.query(getSecretWithId, [secretId, authorisedUser]);
-                const [results, cryptoKey] = await Promise.all([resultsQueryPromise, cryptoSecretForUser]);
+                const [results, cryptoKey] = await Promise.all([resultsQueryPromise, cryptoKeyForUser]);
 
                 const _cryptoKey = cryptoKey.rows[0].key;
                 const decryptedData = results.rows.map((entry) => {
@@ -52,8 +52,8 @@ export const postNewSecret = () => {
     
         if (secret) {
             const cryptography = new Cryptography();
-            const cryptoSecretForUser = await pool.query(getCryptoKeyForUser, [authorisedUser]);
-            const cryptoKey = cryptoSecretForUser.rows[0].key;
+            const cryptoKeyForUser = await pool.query(getCryptoKeyForUser, [authorisedUser]);
+            const cryptoKey = cryptoKeyForUser.rows[0].key;
             const secretEncrypted = await cryptography.encrypt(secret, cryptoKey);
             try {
                 const newSecretResponse = await pool.query(insertNewSecret, [label, secretEncrypted, authorisedUser, icon, category]);
@@ -83,8 +83,8 @@ export const updateSecret = () => {
     
         if (secretId) {
             const cryptography = new Cryptography();
-            const cryptoSecretForUser = await pool.query(getCryptoKeyForUser, [authorisedUser]);
-            const cryptoKey = cryptoSecretForUser.rows[0].key;
+            const cryptoKeyForUser = await pool.query(getCryptoKeyForUser, [authorisedUser]);
+            const cryptoKey = cryptoKeyForUser.rows[0].key;
             const secretEncrypted = await cryptography.encrypt(secret, cryptoKey);
             try {
                 const updateQuery = await pool.query(updateSpecificSecret, [label, secretEncrypted, icon, category, attachments, authorisedUser, secretId]);
