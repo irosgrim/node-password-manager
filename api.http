@@ -13,11 +13,14 @@ POST http://localhost:3000/new-secret
 Content-Type: application/json
 
 {
-    "label": "yahoo",
+    "label": "xxx",
+    "icon": 1,
+    "category":1,
+    "attachments": ["one", "two"],
     "secret": {
-        "username": "yahoo",
-        "password": "strongpassword",
-        "color": "pink"
+        "username": "xxx",
+        "password": "xxx",
+        "color": "xxx"
     }
 }
 
@@ -26,7 +29,7 @@ PATCH http://localhost:3000/update-secret
 Content-Type: application/json
 
 {
-    "secretId": 15,
+    "secretId": 14,
     "label": "updated secret 4",
     "secret": {
         "username": "new username 4",

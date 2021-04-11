@@ -24,7 +24,11 @@ export const getSecretById = () => {
                         id: entry.id,
                         label: entry.label,
                         secret: secretData,
-                        user_id: entry.user_id
+                        date_created: entry.date_created,
+                        date_modified: entry.date_modified,
+                        icon: entry.icon,
+                        category: entry.category,
+                        attachments: entry.attachments
                     };
                 });
                 res.send(decryptedData);
@@ -41,7 +45,10 @@ export const postNewSecret = () => {
     return async (req: LoggedInRequest, res: express.Response) => {
         const secret = JSON.stringify(req.body.secret);
         const label = req.body.label;
-        const authorisedUser = req.authorisedUser;
+        const icon = req.body.icon || 'icon';
+        const category = req.body.category || 'email';
+        const attachments = req.body.attachments || null;
+        const authorisedUser = req.authorisedUser!;
     
         if (secret) {
             const cryptography = new Cryptography();
@@ -49,7 +56,13 @@ export const postNewSecret = () => {
             const cryptoKey = cryptoSecretForUser.rows[0].key;
             const secretEncrypted = await cryptography.encrypt(secret, cryptoKey);
             try {
-                await pool.query(insertNewSecret, [label, secretEncrypted, authorisedUser]);
+                const newSecretResponse = await pool.query(insertNewSecret, [label, secretEncrypted, authorisedUser, icon, category]);
+                if(attachments) {
+                    const {id, user_id, date_created } = newSecretResponse.rows[0];
+                    console.log([id, user_id, date_created]);
+                    const millis = new Date(date_created).getTime();
+                    console.log(uploadSecretAttachments(user_id, id, millis, attachments));
+                }
                 res.send('OK!');
             } catch(err) {
                 log.error(req, err);
@@ -63,6 +76,9 @@ export const updateSecret = () => {
         const secretId = req.body.secretId;
         const secret = JSON.stringify(req.body.secret);
         const label = req.body.label;
+        const icon = req.body.icon || 'icon';
+        const category = req.body.category || 'email';
+        const attachments = req.body.attachments || null;
         const authorisedUser = req.authorisedUser;
     
         if (secretId) {
@@ -71,12 +87,16 @@ export const updateSecret = () => {
             const cryptoKey = cryptoSecretForUser.rows[0].key;
             const secretEncrypted = await cryptography.encrypt(secret, cryptoKey);
             try {
-                const updateQuery = await pool.query(updateSpecificSecret, [label, secretEncrypted, authorisedUser, secretId]);
+                const updateQuery = await pool.query(updateSpecificSecret, [label, secretEncrypted, icon, category, attachments, authorisedUser, secretId]);
                 if(updateQuery.rows.length) {
                     const response = {
                         id : secretId, 
                         label, 
-                        secret: req.body.secret
+                        secret: req.body.secret,
+                        date_created: updateQuery.rows[0].date_created,
+                        date_modified: updateQuery.rows[0].date_modified,
+                        icon,
+                        category
                     };
                     res.send(response);
                 } else {
@@ -121,9 +141,12 @@ export const getAllSecrets = () => {
                 log.error(req, error);
             }
             const rows: Entry[] = results.rows;
-            log.info(req, rows);
             res.send(rows);
             return;
         })
     }
+}
+
+function uploadSecretAttachments(userId: number, secretId: number, dateCreatedMillis:  number, attachments: string[]) {
+    return [userId + '/' + secretId + '_' + dateCreatedMillis + '_' + 'path_to_uploaded_file.ext'];
 }

@@ -27,7 +27,7 @@ export const checkAuthorisation = () => {
             return;
         }
 
-        req.authorisedUser = 1;
+        req.authorisedUser = authorisedUser;
         next();
         
     }
