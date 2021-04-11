@@ -130,9 +130,14 @@ export const searchSecrets = () => {
 interface Entry {
     id: number;
     label: string;
-    secret: string;
-    user_id: number;
-}
+    secret?: any;
+    user_id?: number;
+    date_created: string, 
+    date_modified: string, 
+    icon: string, 
+    category: string, 
+    attachments: string[]
+    }
 
 export const getAllSecrets = () => {
     return async (req: LoggedInRequest, res: express.Response) => {
@@ -148,5 +153,6 @@ export const getAllSecrets = () => {
 }
 
 function uploadSecretAttachments(userId: number, secretId: number, dateCreatedMillis:  number, attachments: string[]) {
+    // handle attachments
     return [userId + '/' + secretId + '_' + dateCreatedMillis + '_' + 'path_to_uploaded_file.ext'];
 }
