@@ -14,8 +14,8 @@ Content-Type: application/json
 
 {
     "label": "xxx",
-    "icon": 1,
-    "category":1,
+    "icon": "email",
+    "category": "email",
     "attachments": ["one", "two"],
     "secret": {
         "username": "xxx",
@@ -30,9 +30,12 @@ Content-Type: application/json
 
 {
     "secretId": 14,
-    "label": "updated secret 4",
+    "label": "updated secret",
+    "icon": "email",
+    "category": "email",
+    "attachments": ["red", "green", "blue"],
     "secret": {
-        "username": "new username 4",
+        "username": "hello world",
         "password": "even stronger password",
         "color": "red"
     }

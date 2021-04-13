@@ -2,7 +2,7 @@ require('dotenv').config()
 import express from 'express';
 import { log } from './helpers/logging';
 import { checkAuthorisation } from './security/userAuthorisation';
-import { getAllSecrets, getSecretById, postNewSecret, searchSecrets, updateSecret } from './routeHandlers/routeHandlers';
+import { getAllSecrets, getSecretById, postNewSecret, searchSecrets, updateSecret } from './routeHandlers';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
