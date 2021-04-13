@@ -4,6 +4,7 @@ import { pool } from '../db/connect';
 import { getCryptoKeyForUser, updateSpecificSecret } from '../db/queries';
 import { log } from '../helpers/logging';
 import { LoggedInRequest } from '../security/userAuthorisation';
+import { status } from '../helpers/responseStatusHandler';
 
 export const updateSecret = () => {
     return async (req: LoggedInRequest, res: express.Response) => {
@@ -23,23 +24,24 @@ export const updateSecret = () => {
             try {
                 const updateQueryResponse = await pool.query(updateSpecificSecret, [label, secretEncrypted, icon, category, attachments, authorisedUser, secretId]);
                 if(updateQueryResponse.rows.length) {
+                    const updateResponse = updateQueryResponse.rows[0];
                     const response = {
                         id : secretId, 
                         label, 
                         secret: req.body.secret,
-                        date_created: updateQueryResponse.rows[0].date_created,
-                        date_modified: updateQueryResponse.rows[0].date_modified,
+                        date_created: updateResponse.date_created,
+                        date_modified: updateResponse.date_modified,
                         icon,
                         category,
-                        attachments: updateQueryResponse.rows[0].attachments
+                        attachments: updateResponse.attachments
                     };
                     res.send(response);
                 } else {
-                    res.status(400).send('NOT OK!');
+                    res.status(400).send(status.notOk);
                 }
             } catch(err) {
                 log.error(req, err);
-                res.status(500).send('NOT OK!');
+                res.status(500).send(status.notOk);
             }
         }
     }
