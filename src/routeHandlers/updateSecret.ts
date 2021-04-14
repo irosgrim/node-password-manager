@@ -14,8 +14,10 @@ export const updateSecret = () => {
         const icon = req.body.icon || 'icon';
         const category = req.body.category || 'email';
         const attachments = req.body.attachments || null;
+        const files = req.files;
         const authorisedUser = req.authorisedUser;
     
+        console.log(req.files);
         if (secretId) {
             const cryptography = new Cryptography();
             const cryptoKeyForUser = await pool.query(getCryptoKeyForUser, [authorisedUser]);
