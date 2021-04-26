@@ -4,6 +4,8 @@ export const getCryptoKeyForUser = `SELECT key FROM encryption_keys
 export const getSecretWithId = `SELECT * FROM wallet 
     WHERE id=$1 AND user_id=$2`;
 
+export const getAttachmentsForSecretWithId = `SELECT attachments FROM wallet WHERE id=$1 AND user_id=$2`;
+
 export const insertNewSecret = `INSERT INTO wallet (label, secret, user_id, date_created, date_modified, icon, category, attachments) 
     VALUES ($1, $2, $3, NOW(), NOW(), $4, $5, $6)
     RETURNING *

@@ -14,7 +14,7 @@ export const searchSecrets = () => {
                 const results = await pool.query(search, [searchQuery, authorisedUser]);
                 res.send(results.rows);
             } catch(err) {
-                log.error(req, err);
+                log.error(err, req);
             }
         }
     }

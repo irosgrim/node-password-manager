@@ -32,7 +32,7 @@ export const getSecretById = () => {
                 });
                 res.send(decryptedData);
             } catch (err) {
-                log.error(req, err);
+                log.error(err, req);
             }
         } else {
             res.status(400).send();

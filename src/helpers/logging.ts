@@ -7,14 +7,16 @@ class LogHandler {
         return fullUrl;
     }
 
-    error(req: express.Request, err: Error) {
-        console.log('URL: ', this.getFullUrl(req))
-        console.log('METHOD: ', req.method);
+    error(err: Error, req?: express.Request) {
+        if(req) {
+            console.log('URL: ', this.getFullUrl(req))
+            console.log('METHOD: ', req.method);
+        }
         console.log('DATE: ', new Date());
         console.log('ERROR: ', err.message);
     }
 
-    info(req: express.Request, log: any) {
+    info(log: any, req: express.Request) {
         console.log('URL: ', this.getFullUrl(req));
         console.log('METHOD: ', req.method);
         console.log('DATE: ', new Date());

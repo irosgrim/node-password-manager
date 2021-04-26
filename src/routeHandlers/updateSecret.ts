@@ -42,7 +42,7 @@ export const updateSecret = () => {
                     res.status(400).send(status.notOk);
                 }
             } catch(err) {
-                log.error(req, err);
+                log.error(err, req);
                 res.status(500).send(status.notOk);
             }
         }

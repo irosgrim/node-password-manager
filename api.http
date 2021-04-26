@@ -2,8 +2,10 @@
 http://localhost:3000/all
 
 ### get one secret by id
-http://localhost:3000/secret/8
+http://localhost:3000/secret/56
 
+### get attachment for secret with id
+http://localhost:3000/attachment/54
 
 ### search secrets by label
 http://localhost:3000/search?q=yaho

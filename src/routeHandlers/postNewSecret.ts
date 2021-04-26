@@ -31,7 +31,7 @@ export const postNewSecret = () => {
         if (secret) {
             let filesPaths: string[] | null = null; 
             if(files.length) {
-                 filesPaths = await uploadFiles(authorisedUser, files);
+                 filesPaths = await uploadFiles(authorisedUser, files as Express.Multer.File[]);
             }
             const cryptography = new Cryptography();
             const cryptoKeyForUser = await pool.query(getCryptoKeyForUser, [authorisedUser]);
@@ -47,31 +47,38 @@ export const postNewSecret = () => {
                 }
                 res.send('OK!');
             } catch(err) {
-                log.error(req, err);
+                log.error(err, req);
             }
         }
     }
 }
 
 export async function uploadFiles(authorisedUser: number, files: Express.Multer.File[]) {
-    let paths: string[] = [];
+    let filePaths: string[] = [];
     for(const file of files) {
-        const timeInMilliseconds = new Date().getTime();
-        const renamedFile = timeInMilliseconds +'_' + authorisedUser +'_' + file.originalname;
-        const r = await minioClient.putObject('testing', renamedFile, file.buffer);
-        paths = [...paths, renamedFile];
+        const renamedFile = renameFile(authorisedUser, file.originalname);
+        try {
+            await minioClient.putObject('testing', renamedFile, file.buffer);
+        } catch(err) {
+            log.error(err);
+        }
+        filePaths = [...filePaths, renamedFile];
     }
-    return paths;
+    return filePaths;
 }
 
-export async function getPresignedFilesUrl(files: string[]): Promise<string[]> {
+export async function getPresignedFilesUrl(files: string[], validityTimeInSeconds: number = 60 * 60): Promise<string[]> {
     let urls: string[] = [];
-    const oneHour = 60 * 60;
     for(const file of files) {
-        const getPresignedUrl = await minioClient.presignedUrl('GET', 'testing', file, oneHour);
+        const getPresignedUrl = await minioClient.presignedUrl('GET', 'testing', file, validityTimeInSeconds);
         urls = [...urls, getPresignedUrl];
     }
     return urls;
 
+}
+
+function renameFile(authorisedUser: number, originalName: string): string {
+    const timeInMilliseconds = new Date().getTime();
+    return timeInMilliseconds +'_' + authorisedUser +'_' + originalName
 }
 

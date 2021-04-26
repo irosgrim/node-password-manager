@@ -20,7 +20,7 @@ export const getAllSecrets = () => {
     return async (req: LoggedInRequest, res: express.Response) => {
         pool.query(getAllEntries, [req.authorisedUser], async (error, results) => {
             if (error) {
-                log.error(req, error);
+                log.error(error, req);
             }
             const rows: Entry[] = results.rows;
             res.send(rows);
