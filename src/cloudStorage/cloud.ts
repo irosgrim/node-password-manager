@@ -15,7 +15,7 @@ function cloudInstance(){
         case 'minio':
             return new Minio.Client({
                 endPoint: process.env.MINIO_ENDPOINT || '',
-                port: parseInt(process.env.MINIO_PORT!) || 9000,
+                port: process.env.MINIO_PORT && parseInt(process.env.MINIO_PORT!) || 9000,
                 useSSL: false,
                 accessKey: process.env.MINIO_ACCESS_KEY || '',
                 secretKey: process.env.MINIO_SECRET_KEY || ''
@@ -29,7 +29,7 @@ export async function uploadFiles(authorisedUser: number, files: Express.Multer.
         const renamedFile = renameFile(authorisedUser, file.originalname);
         const mimeType = file.mimetype;
         const metadata = {
-            'Content-type': mimeType
+            'Content-Type': mimeType,
           }
         try {
             await cloud.putObject('testing', renamedFile, file.buffer, metadata);
