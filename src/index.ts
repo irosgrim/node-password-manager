@@ -5,7 +5,7 @@ import { checkAuthorisation } from './security/userAuthorisation';
 import { getAllSecrets, getAttachmentsById, getSecretById, postNewSecret, searchSecrets, updateSecret } from './routeHandlers';
 import multer from 'multer';
 
-const maxFileSize = 1000000;
+const maxFileSize = 100000;
 
 const temporaryStorage = multer.memoryStorage();
 const multerUpload =  multer({storage: temporaryStorage, limits: {fileSize: maxFileSize}}).array('attachments', 10);

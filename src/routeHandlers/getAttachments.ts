@@ -3,7 +3,7 @@ import express from 'express';
 import { pool } from '../db/connect';
 import { getAttachmentsForSecretWithId } from '../db/queries';
 import { log } from '../helpers/logging';
-import { getPresignedFilesUrl } from './postNewSecret';
+import { getPresignedFilesUrl } from '../cloudStorage/cloud';
 
 export const getAttachmentsById = () => {
     return async (req: LoggedInRequest, res: express.Response) => {

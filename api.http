@@ -5,7 +5,7 @@ http://localhost:3000/all
 http://localhost:3000/secret/56
 
 ### get attachment for secret with id
-http://localhost:3000/attachment/54
+http://localhost:3000/attachment/61
 
 ### search secrets by label
 http://localhost:3000/search?q=yaho

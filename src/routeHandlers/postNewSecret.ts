@@ -1,20 +1,10 @@
 import express from 'express';
-import { Multer } from 'multer';
+import { uploadFiles } from '../cloudStorage/cloud';
 import Cryptography from '../crypto/crypto';
 import { pool } from '../db/connect';
 import { getCryptoKeyForUser, insertNewSecret } from '../db/queries';
 import { log } from '../helpers/logging';
 import { LoggedInRequest } from '../security/userAuthorisation';
-import { uploadSecretAttachments } from './uploadFiles';
-const Minio = require('minio');
-
-const minioClient = new Minio.Client({
-    endPoint: process.env.S3_ENDPOINT,
-    port: parseInt(process.env.S3_PORT!) || 9000,
-    useSSL: false,
-    accessKey: process.env.S3_ACCESS_KEY,
-    secretKey: process.env.S3_SECRET_KEY
-})
 
 export const postNewSecret = () => {
     return async (req: LoggedInRequest, res: express.Response) => {
@@ -26,7 +16,6 @@ export const postNewSecret = () => {
         const authorisedUser = req.authorisedUser!;
         const files = req.files;
         console.log(files);
-
         
         if (secret) {
             let filesPaths: string[] | null = null; 
@@ -53,32 +42,4 @@ export const postNewSecret = () => {
     }
 }
 
-export async function uploadFiles(authorisedUser: number, files: Express.Multer.File[]) {
-    let filePaths: string[] = [];
-    for(const file of files) {
-        const renamedFile = renameFile(authorisedUser, file.originalname);
-        try {
-            await minioClient.putObject('testing', renamedFile, file.buffer);
-        } catch(err) {
-            log.error(err);
-        }
-        filePaths = [...filePaths, renamedFile];
-    }
-    return filePaths;
-}
-
-export async function getPresignedFilesUrl(files: string[], validityTimeInSeconds: number = 60 * 60): Promise<string[]> {
-    let urls: string[] = [];
-    for(const file of files) {
-        const getPresignedUrl = await minioClient.presignedUrl('GET', 'testing', file, validityTimeInSeconds);
-        urls = [...urls, getPresignedUrl];
-    }
-    return urls;
-
-}
-
-function renameFile(authorisedUser: number, originalName: string): string {
-    const timeInMilliseconds = new Date().getTime();
-    return timeInMilliseconds +'_' + authorisedUser +'_' + originalName
-}
 
