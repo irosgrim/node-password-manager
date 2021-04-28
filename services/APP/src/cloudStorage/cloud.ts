@@ -66,10 +66,8 @@ export async function deleteFiles(files: string[]): Promise<'OK' | 'NOT OK'> {
     }
     try {
         const r = await cloud.removeObjects(bucketName, files);
-        console.log('success');
         return 'OK';
     } catch (err) {
-        console.log('cant delete files: ', err);
         return 'NOT OK';
     }
 }
