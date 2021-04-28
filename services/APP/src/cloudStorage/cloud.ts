@@ -2,6 +2,7 @@ import * as Minio from "minio";
 import { log } from '../helpers/logging';
 
 const cloud = cloudInstance();
+const bucketName = 'testing';
 
 function cloudInstance(){
     switch(process.env.CLOUD_SERVICE) {
@@ -32,7 +33,7 @@ export async function uploadFiles(authorisedUser: number, files: Express.Multer.
             'Content-Type': mimeType,
           }
         try {
-            await cloud.putObject('testing', renamedFile, file.buffer, metadata);
+            await cloud.putObject(bucketName, renamedFile, file.buffer, metadata);
         } catch(err) {
             log.error(err);
         }
@@ -47,7 +48,7 @@ export async function getPresignedFilesUrl(files: string[], validityTimeInSecond
         return [];
     }
     for(const file of files) {
-        const getPresignedUrl = await cloud.presignedUrl('GET', 'testing', file, validityTimeInSeconds);
+        const getPresignedUrl = await cloud.presignedUrl('GET', bucketName, file, validityTimeInSeconds);
         urls = [...urls, getPresignedUrl];
     }
     return urls;
@@ -56,4 +57,19 @@ export async function getPresignedFilesUrl(files: string[], validityTimeInSecond
 function renameFile(authorisedUser: number, originalName: string): string {
     const timeInMilliseconds = new Date().getTime();
     return timeInMilliseconds +'_' + authorisedUser +'_' + originalName
+}
+
+
+export async function deleteFiles(files: string[]): Promise<'OK' | 'NOT OK'> {
+    if(!files || !files.length) {
+        return 'OK';
+    }
+    try {
+        const r = await cloud.removeObjects(bucketName, files);
+        console.log('success');
+        return 'OK';
+    } catch (err) {
+        console.log('cant delete files: ', err);
+        return 'NOT OK';
+    }
 }

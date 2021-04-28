@@ -7,6 +7,9 @@ http://localhost:3000/secret/56
 ### get attachment for secret with id
 http://localhost:3000/attachment/61
 
+### delete secret with id
+DELETE http://localhost:3000/delete-secret/14
+
 ### search secrets by label
 http://localhost:3000/search?q=yaho
 

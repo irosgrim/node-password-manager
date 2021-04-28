@@ -5,3 +5,4 @@ export * from './searchSecrets';
 export * from './updateSecret';
 export * from './updateSecret';
 export * from './getAttachments';
+export * from './deleteSecretWithId';

@@ -2,7 +2,7 @@ require('dotenv').config()
 import express from 'express';
 import { log } from './helpers/logging';
 import { checkAuthorisation } from './security/userAuthorisation';
-import { getAllSecrets, getAttachmentsById, getSecretById, postNewSecret, searchSecrets, updateSecret } from './routeHandlers';
+import { deleteSecretWithId, getAllSecrets, getAttachmentsById, getSecretById, postNewSecret, searchSecrets, updateSecret } from './routeHandlers';
 import multer from 'multer';
 
 const maxFileSize = 100000;
@@ -23,6 +23,6 @@ app.get('/attachment/:id', getAttachmentsById());
 app.get('/search', searchSecrets());
 app.post('/new-secret', multerUpload, postNewSecret());
 app.patch('/update-secret', multerUpload, updateSecret());
-
+app.delete('/delete-secret/:id', deleteSecretWithId());
 
 app.listen(PORT, () => log.text(`server 🔥 on port ${PORT}`));
