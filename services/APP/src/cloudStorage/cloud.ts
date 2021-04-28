@@ -1,8 +1,7 @@
 import * as Minio from "minio";
 import { log } from '../helpers/logging';
-
 const cloud = cloudInstance();
-const bucketName = 'testing';
+const bucketName = process.env.BUCKET_NAME || '';
 
 function cloudInstance(){
     switch(process.env.CLOUD_SERVICE) {
@@ -58,7 +57,6 @@ function renameFile(authorisedUser: number, originalName: string): string {
     const timeInMilliseconds = new Date().getTime();
     return timeInMilliseconds +'_' + authorisedUser +'_' + originalName
 }
-
 
 export async function deleteFiles(files: string[]): Promise<'OK' | 'NOT OK'> {
     if(!files || !files.length) {

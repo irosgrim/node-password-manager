@@ -1,14 +1,15 @@
 import express from 'express';
 import { deleteFiles } from '../cloudStorage/cloud';
 import { pool } from '../db/connect';
-import { getSecretWithId, deleteSecretWithId as queryDeleteSecretWithId} from '../db/queries';
+import { 
+    getSecretWithId, 
+    deleteSecretWithId as queryDeleteSecretWithId} from '../db/queries';
 import { LoggedInRequest } from '../security/userAuthorisation';
 
 export const deleteSecretWithId = () => {
     return async (req: LoggedInRequest, res: express.Response) => {
         const secretId = req.params.id;
         const authorisedUser = req.authorisedUser;
-    
         if (secretId) {
             try {
                 const results = await pool.query(getSecretWithId, [secretId, authorisedUser]);

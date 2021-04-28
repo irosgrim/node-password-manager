@@ -9,7 +9,6 @@ export const getAttachmentsById = () => {
     return async (req: LoggedInRequest, res: express.Response) => {
         const secretId = req.params.id;
         const authorisedUser = req.authorisedUser;
-    
         if (secretId) {
             try {
                 const results = await pool.query(getAttachmentsForSecretWithId, [secretId, authorisedUser]);
