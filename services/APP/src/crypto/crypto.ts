@@ -2,7 +2,6 @@ import crypto from 'crypto';
 
 export default class Cryptography {
     private algorithm: string = 'aes-256-ctr';
-    // private secretKey: string = process.env.CRYPTO_SECRET_KEY!;
     private iv;
     constructor() {
         this.iv = crypto.randomBytes(16);
