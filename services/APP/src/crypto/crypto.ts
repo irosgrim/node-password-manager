@@ -11,11 +11,11 @@ export default class Cryptography {
         const cipher = crypto.createCipheriv(this.algorithm, secretKey, this.iv);
         const encrypted = Buffer.concat([cipher.update(text), cipher.final()]);
     
-        return this.iv.toString('hex') +'_'+ encrypted.toString('hex');
+        return this.iv.toString('hex') +'.'+ encrypted.toString('hex');
     }
 
     public decrypt(hash: string, secretKey: string): string {
-        const encryptedHash = hash.split('_');
+        const encryptedHash = hash.split('.');
         const iv = encryptedHash[0];
         const content = encryptedHash[1];
         const decipher = crypto.createDecipheriv(this.algorithm, secretKey, Buffer.from(iv, 'hex'));

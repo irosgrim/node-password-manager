@@ -1,20 +1,20 @@
 ### get all secrets
-http://localhost:3000/all
+http://localhost:3000/secrets
 
 ### get one secret by id
-http://localhost:3000/secret/56
+http://localhost:3000/secrets/73
 
 ### get attachment for secret with id
-http://localhost:3000/attachment/61
+http://localhost:3000/attachments/73
 
 ### delete secret with id
-DELETE http://localhost:3000/delete-secret/14
+DELETE http://localhost:3000/secrets/delete/71
 
 ### search secrets by label
-http://localhost:3000/search?q=yaho
+http://localhost:3000/search?q=cat
 
 ### post new secret
-POST http://localhost:3000/new-secret
+POST http://localhost:3000/secrets/new
 Content-Type: application/json
 
 {
@@ -30,18 +30,17 @@ Content-Type: application/json
 }
 
 ### update secret by id
-PATCH http://localhost:3000/update-secret
+PATCH http://localhost:3000/secrets/update
 Content-Type: application/json
 
 {
-    "secretId": 14,
+    "secretId": 6,
     "label": "updated secret",
     "icon": "email",
     "category": "email",
-    "attachments": ["red", "green", "blue"],
     "secret": {
-        "username": "hello world",
-        "password": "even stronger password",
+        "username": "ion",
+        "password": "pretty_str0ng_passw0rd",
         "color": "red"
     }
 }
