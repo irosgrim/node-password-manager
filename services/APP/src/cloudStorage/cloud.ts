@@ -34,8 +34,8 @@ export async function uploadFiles(authorisedUser: number, files: Express.Multer.
           }
         try {
             await cloud.putObject(bucketName, renamedFile, file.buffer, metadata);
-        } catch(err) {
-            log.error(err);
+        } catch(error) {
+            log.error(error.message);
         }
         filePaths = [...filePaths, renamedFile];
     }

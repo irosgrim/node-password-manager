@@ -35,8 +35,8 @@ export const postNewSecret = () => {
                     // console.log(uploadSecretAttachments(user_id, id, millis, attachments));
                 }
                 res.send('OK!');
-            } catch(err) {
-                log.error(err, req);
+            } catch(error) {
+                log.error(error.message, req);
             }
         }
     }

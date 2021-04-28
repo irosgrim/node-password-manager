@@ -13,8 +13,8 @@ export const searchSecrets = () => {
             try {
                 const results = await pool.query(search, [searchQuery, authorisedUser]);
                 res.send(results.rows);
-            } catch(err) {
-                log.error(err, req);
+            } catch(error) {
+                log.error(error.message, req);
             }
         }
     }

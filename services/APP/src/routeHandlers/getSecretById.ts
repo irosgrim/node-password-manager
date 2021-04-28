@@ -31,8 +31,8 @@ export const getSecretById = () => {
                     };
                 });
                 res.send(decryptedData);
-            } catch (err) {
-                log.error(err, req);
+            } catch (error) {
+                log.error(error.message, req);
             }
         } else {
             res.status(400).send();

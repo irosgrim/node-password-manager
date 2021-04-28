@@ -18,8 +18,8 @@ export const getAttachmentsById = () => {
                     const urls = await getPresignedFilesUrl(attachments, 600);
                     res.send(urls);
                 }
-            } catch (err) {
-                log.error(err, req);
+            } catch (error) {
+                log.error(error.message, req);
             }
         } else {
             res.status(400).send();
