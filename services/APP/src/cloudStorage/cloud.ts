@@ -41,7 +41,7 @@ export async function uploadFiles(authorisedUser: number, files: Express.Multer.
     return filePaths;
 }
 
-export async function getPresignedFilesUrl(files: string[], validityTimeInSeconds: number = 60 * 60): Promise<string[]> {
+export async function getPresignedFilesUrl(files: string[], validityTimeInSeconds: number = 60 * 10): Promise<string[]> {
     let urls: string[] = [];
     if(!files) {
         return [];
@@ -53,19 +53,20 @@ export async function getPresignedFilesUrl(files: string[], validityTimeInSecond
     return urls;
 }
 
-function renameFile(authorisedUser: number, originalName: string): string {
+function renameFile(userId: number, originalName: string): string {
     const timeInMilliseconds = new Date().getTime();
-    return timeInMilliseconds +'_' + authorisedUser +'_' + originalName
+    return timeInMilliseconds +'_' + userId +'_' + originalName
 }
 
-export async function deleteFiles(files: string[]): Promise<'OK' | 'NOT OK'> {
+export async function deleteFiles(files: string[]): Promise<string[] | void> {
     if(!files || !files.length) {
-        return 'OK';
+        return;
     }
     try {
         const r = await cloud.removeObjects(bucketName, files);
-        return 'OK';
+        return files;
     } catch (err) {
-        return 'NOT OK';
+        log.error(err);
+        return;
     }
 }

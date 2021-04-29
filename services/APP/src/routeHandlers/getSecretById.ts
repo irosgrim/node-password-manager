@@ -22,20 +22,13 @@ export const getSecretById = () => {
                 const decryptedData = results.rows.map((entry) => {
                     const secretData = new Cryptography().decrypt(entry.secret, _cryptoKey);
                     return {
-                        id: entry.id,
-                        label: entry.label,
+                        ...entry,
                         secret: JSON.parse(secretData),
-                        date_created: entry.date_created,
-                        date_modified: entry.date_modified,
-                        icon: entry.icon,
-                        category: entry.category,
-                        attachments: entry.attachments
                     };
                 });
                 res.send(decryptedData[0]);
             } catch (error) {
-                console.log('here')
-                log.error(error.message, req);
+                log.error('getSecretById: ' + error.message, req);
             }
         } else {
             res.status(400).send();

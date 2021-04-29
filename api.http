@@ -2,13 +2,13 @@
 http://localhost:3000/secrets
 
 ### get one secret by id
-http://localhost:3000/secrets/73
+http://localhost:3000/secrets/76
 
 ### get attachment for secret with id
 http://localhost:3000/attachments/73
 
 ### delete secret with id
-DELETE http://localhost:3000/secrets/delete/71
+DELETE http://localhost:3000/secrets/delete/75
 
 ### search secrets by label
 http://localhost:3000/search?q=cat

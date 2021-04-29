@@ -17,8 +17,6 @@ export const deleteSecretWithId = () => {
                     res.status(404).send('NOT FOUND');
                     return;
                 }
-                const id = results.rows[0].id;
-                const userId = authorisedUser;
                 const attachments = results.rows[0].attachments;
                 const deleteAttachments = await deleteFiles(attachments);
                 const deleteResults = await pool.query(queryDeleteSecretWithId, [secretId, authorisedUser]);

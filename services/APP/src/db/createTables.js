@@ -13,13 +13,25 @@ client.connect();
 const createUsersTable = () => {
     const usersTableQuery = `
         CREATE TABLE IF NOT EXISTS users (
-                id SERIAL PRIMARY KEY,
-                username character varying(30) NOT NULL UNIQUE,
-                password text NOT NULL,
-                email character varying(70) NOT NULL UNIQUE
-            );
+            id SERIAL PRIMARY KEY,
+            username character varying(30) NOT NULL UNIQUE,
+            password text NOT NULL,
+            email character varying(70) NOT NULL UNIQUE,
+            registration_date timestamp without time zone,
+            last_login_date timestamp without time zone
+        );
     `;
     return usersTableQuery;
+}
+
+const createEncryptionKeysTable = () => {
+    const encryptionKeysTable = `
+        CREATE TABLE encryption_keys (
+            id SERIAL PRIMARY KEY REFERENCES users(id),
+            key text NOT NULL
+        );
+    `;
+    return encryptionKeysTable;
 }
 
 const createWalletTable = () => {
@@ -27,8 +39,13 @@ const createWalletTable = () => {
         CREATE TABLE IF NOT EXISTS wallet (
             id SERIAL PRIMARY KEY,
             label character varying(200) NOT NULL,
-            secret json,
-            user_id integer NOT NULL REFERENCES users(id)
+            secret text,
+            user_id integer NOT NULL REFERENCES users(id),
+            date_created timestamp without time zone,
+            date_modified timestamp without time zone,
+            icon character varying(100) DEFAULT 'email'::character varying,
+            category character varying(100) DEFAULT 'email'::character varying,
+            attachments text[]
         );
     `;
     return walletTableQuery;
@@ -40,8 +57,12 @@ const createAllTables = async () => {
         await client.query(createUsersTable());
         console.log('USERS TABLE CREATED ✅');
 
+        await client.query(createEncryptionKeysTable());
+        console.log('ENCRYPTION KEYS TABLE CREATED ✅');
+
         await client.query(createWalletTable());
         console.log('WALLET TABLE CREATED ✅');
+
         await client.end();
     } catch (err) {
         console.log(err);

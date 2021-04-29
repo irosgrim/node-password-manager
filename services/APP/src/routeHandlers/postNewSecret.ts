@@ -8,7 +8,7 @@ import { LoggedInRequest } from '../security/userAuthorisation';
 
 export const postNewSecret = () => {
     return async (req: LoggedInRequest, res: express.Response) => {
-        const secret = JSON.stringify(req.body.secret);
+        const secret = req.body.secret;
         const label = req.body.label;
         const icon = req.body.icon || 'icon';
         const category = req.body.category || 'email';
@@ -25,7 +25,7 @@ export const postNewSecret = () => {
             const secretEncrypted = await cryptography.encrypt(secret, cryptoKey);
             try {
                 await pool.query(insertNewSecret, [label, secretEncrypted, authorisedUser, icon, category, filesPaths]);
-                res.send('OK!');
+                res.status(200).send('OK!');
             } catch(error) {
                 log.error(error.message, req);
             }

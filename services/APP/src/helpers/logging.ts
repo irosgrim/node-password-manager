@@ -16,9 +16,11 @@ class LogHandler {
         console.log('ERROR: ', errMessage);
     }
 
-    info(log: any, req: express.Request) {
-        console.log('URL: ', this.getFullUrl(req));
-        console.log('METHOD: ', req.method);
+    info(log: any, req?: express.Request) {
+        if(req) {
+            console.log('URL: ', this.getFullUrl(req));
+            console.log('METHOD: ', req.method);
+        }
         console.log('DATE: ', new Date());
         console.log('LOG: ', log);
     }
