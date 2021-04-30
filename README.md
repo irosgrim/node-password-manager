@@ -18,7 +18,6 @@ MINIO_ACCESS_KEY=minio_username
 MINIO_SECRET_KEY=minio_password
 ## s3 server
 S3_ENDPOINT=s3_host
-S3_PORT=s3_host_port
 S3_ACCESS_KEY=s3_username
 S3_SECRET_KEY=s3_password
 ```

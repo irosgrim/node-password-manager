@@ -1,5 +1,6 @@
 import * as Minio from "minio";
 import { log } from '../helpers/logging';
+import { renameFile } from '../helpers/text';
 const cloud = cloudInstance();
 const bucketName = process.env.BUCKET_NAME || '';
 
@@ -51,11 +52,6 @@ export async function getPresignedFilesUrl(files: string[], validityTimeInSecond
         urls = [...urls, getPresignedUrl];
     }
     return urls;
-}
-
-function renameFile(userId: number, originalName: string): string {
-    const timeInMilliseconds = new Date().getTime();
-    return timeInMilliseconds +'_' + userId +'_' + originalName
 }
 
 export async function deleteFiles(files: string[]): Promise<string[] | void> {
