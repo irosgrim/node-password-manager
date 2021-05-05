@@ -6,6 +6,7 @@ import { LoggedInRequest } from '../security/userAuthorisation';
 
 export const getAllSecrets = () => {
     return async (req: LoggedInRequest, res: express.Response) => {
+        console.log(req.session);
         pool.query(getAllEntries, [req.authorisedUser], async (error, results) => {
             if (error) {
                 log.error(error.message, req);
