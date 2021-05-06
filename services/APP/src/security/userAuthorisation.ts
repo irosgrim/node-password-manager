@@ -1,11 +1,7 @@
-import express from 'express';
-
-export interface LoggedInRequest extends express.Request {
-    authorisedUser?: number | null;
-}
+import express, { Request }from 'express';
 
 export const checkAuthorisation = () => {
-    return async (req: LoggedInRequest, res: express.Response, next: express.NextFunction) => {
+    return async (req: Request, res: express.Response, next: express.NextFunction) => {
         // const token = req.cookies.token || null;
 
         // if(!token) {
@@ -20,14 +16,13 @@ export const checkAuthorisation = () => {
         //         console.log('Bad JWT format');
         //     }
         // }
-        const authorisedUser: number | null = 1;
 
-        if(!authorisedUser) {
+        if(!req.session.authorisedUser) {
             res.status(401).send('Please log in!');
             return;
         }
 
-        req.authorisedUser = authorisedUser;
+        // req.session.authorisedUser = authorisedUser;
         next();
         
     }

@@ -7,3 +7,4 @@ services:
             - 6379:6379
         volumes:
             - ./volumes/redis:/data
+        restart: unless-stopped

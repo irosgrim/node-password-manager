@@ -9,3 +9,9 @@ export interface Secret {
     category: string;
     attachments: string[] | null;
 }
+
+declare module 'express-session' {
+    export interface SessionData {
+        authorisedUser: number;
+    }
+}
