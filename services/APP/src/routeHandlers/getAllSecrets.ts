@@ -1,18 +1,15 @@
-import express, {Request} from 'express';
-import { pool } from '../db/connect';
-import { getAllEntries } from '../db/queries';
+import { Request, Response } from 'express';
 import { log } from '../helpers/logging';
+import { api } from '../api';
 
 export const getAllSecrets = () => {
-    return async (req: Request, res: express.Response) => {
-        console.log(req.session);
-        pool.query(getAllEntries, [req.session.authorisedUser], async (error, results) => {
-            if (error) {
-                log.error(error.message, req);
-            }
-            const rows = results.rows;
-            res.send(rows);
-            return;
-        })
+    return async (req: Request, res: Response) => {
+        const authorisedUser = req.session.authorisedUser;
+        try {
+            const allSecrets = await api.getAllSecrets(authorisedUser!);
+            res.send(allSecrets);
+        } catch (err) {
+            log.error(err.message, req);
+        }
     }
 }

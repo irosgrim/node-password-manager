@@ -21,7 +21,6 @@ Content-Type: application/json
     "label": "xxx",
     "icon": "email",
     "category": "email",
-    "attachments": ["one", "two"],
     "secret": {
         "username": "xxx",
         "password": "xxx",

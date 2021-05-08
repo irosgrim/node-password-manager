@@ -1,21 +1,17 @@
-import express from 'express';
-import { pool } from '../db/connect';
-import { search } from '../db/queries';
+import { Request, Response } from 'express';
+import { api } from '../api';
 import { log } from '../helpers/logging';
-import { LoggedInRequest } from '../security/userAuthorisation';
 
 export const searchSecrets = () => {
-    return async (req: LoggedInRequest, res: express.Response) => {
+    return async (req: Request, res: Response) => {
         const searchQuery = req.query.q || '';
-        const authorisedUser = req.authorisedUser;
-        console.log(searchQuery);
-        
+        const authorisedUser = req.session.authorisedUser;
         if(searchQuery) {
             try {
-                const results = await pool.query(search, [searchQuery, authorisedUser]);
-                res.send(results.rows);
-            } catch(error) {
-                log.error('db search secrets: ' + error.message, req);
+                const results = await api.searchSecret(searchQuery.toString(), authorisedUser!);
+                res.send(results);
+            } catch(err) {
+                log.error(err.message, req);
             }
         }
     }

@@ -5,13 +5,15 @@ export const getSecretWithId = `SELECT * FROM wallet
     WHERE id=$1 AND user_id=$2`;
 
 export const deleteSecretWithId = `DELETE FROM wallet 
-    WHERE id=$1 AND user_id=$2`;
+    WHERE id=$1 AND user_id=$2
+    RETURNING id
+    `;
 
 export const getAttachmentsForSecretWithId = `SELECT attachments FROM wallet WHERE id=$1 AND user_id=$2`;
 
 export const insertNewSecret = `INSERT INTO wallet (label, secret, user_id, date_created, date_modified, icon, category, attachments) 
     VALUES ($1, $2, $3, NOW(), NOW(), $4, $5, $6)
-    RETURNING *
+    RETURNING label
     `;
 
 export const getAllEntries = `SELECT id, label, date_created, date_modified, icon, category, attachments 
@@ -26,4 +28,4 @@ export const search = `SELECT id, label, date_created, date_modified, icon, cate
 export const updateSpecificSecret = `UPDATE wallet SET label=$1, secret=$2, icon=$3, category=$4, date_modified=NOW(), attachments=$5 
     WHERE user_id=$6
     AND id=$7 
-    RETURNING id, label, secret, date_created, date_modified, icon, category, attachments`;
+    RETURNING label`;
