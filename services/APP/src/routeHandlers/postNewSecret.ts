@@ -1,8 +1,5 @@
 import { Request, Response} from 'express';
 import { uploadFiles } from '../cloudStorage/cloud';
-import Cryptography from '../crypto/crypto';
-import { pool } from '../db/connect';
-import { getCryptoKeyForUser, insertNewSecret } from '../db/queries';
 import { api } from '../api';
 import { log } from '../helpers/logging';
 

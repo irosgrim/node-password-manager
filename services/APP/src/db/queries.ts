@@ -1,6 +1,9 @@
 export const getCryptoKeyForUser = `SELECT key FROM encryption_keys 
     WHERE id=$1`;
 
+export const getUser = `SELECT * FROM users 
+    WHERE username=$1`;
+
 export const getSecretWithId = `SELECT * FROM wallet 
     WHERE id=$1 AND user_id=$2`;
 

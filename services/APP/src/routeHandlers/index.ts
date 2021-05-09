@@ -6,3 +6,5 @@ export * from './updateSecret';
 export * from './updateSecret';
 export * from './getAttachments';
 export * from './deleteSecretWithId';
+export * from './login';
+export * from './logout';

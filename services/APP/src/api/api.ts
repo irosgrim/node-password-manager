@@ -1,8 +1,15 @@
-import { deleteFiles, uploadFiles } from '../cloudStorage/cloud';
+import { deleteFiles } from '../cloudStorage/cloud';
 import Cryptography from '../crypto/crypto';
-import { log } from '../helpers/logging';
 import { pool } from '../db/connect';
-import { deleteSecretWithId, getAllEntries, getCryptoKeyForUser, getSecretWithId, insertNewSecret, search, updateSpecificSecret } from '../db/queries';
+import { 
+    deleteSecretWithId, 
+    getAllEntries, 
+    getCryptoKeyForUser, 
+    getSecretWithId, 
+    insertNewSecret, 
+    search, 
+    updateSpecificSecret, 
+    getUser } from '../db/queries';
 import { Secret } from '../types/types';
 
 export interface NewSecretFields {
@@ -14,6 +21,7 @@ export interface NewSecretFields {
 }
 
 export interface ApiOperations {
+    checkCredentials: (credentials: {username: string, password: string}) => Promise<number | undefined>;
     getAllSecrets: (authorisedUser: number) => Promise<Secret[] | void>;
     getSecretById: (secretId: number, authorisedUser: number) => Promise<Secret | void>;
     searchSecret: (searchQuery: string, authorisedUser: number) => Promise<Secret[] | void>;
@@ -30,6 +38,19 @@ class Api implements ApiOperations {
         const cryptography = new Cryptography();
         const secretEncrypted = await cryptography.encrypt(secret, cryptoKey);
         return secretEncrypted;
+    }
+
+    public async checkCredentials(credentials: {username: string, password: string}): Promise<number | undefined> {
+        const user = await pool.query(getUser, [credentials.username]);
+        // TODO: implement proper password check!
+        if(!user.rows.length) {
+            return;
+        }
+        const password = user.rows[0].password;
+        if(credentials.password !== password) {
+            return;
+        }
+        return user.rows[0].id;
     }
 
     public async getAllSecrets(authorisedUser: number): Promise<Secret[] | void> {
